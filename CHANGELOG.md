@@ -30,3 +30,6 @@
 
 ## [1.4.2]
 - Added GitHub repository and icon.
+
+## [1.4.3]
+- Removed accidental banner colour.
