@@ -27,3 +27,6 @@
 
 ## [1.4.1]
 - Added gifs to description.
+
+## [1.4.2]
+- Added GitHub repository and icon.

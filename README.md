@@ -6,12 +6,12 @@ An extension to ease log file reading.
 
 * Draw a flame graph generated from the log file.
   * Processes a 45MB file with 600k lines in a couple of seconds.
-![Match](https://drive.google.com/uc?export=view&id=1p19foLm4V7sWq2nuvav1pX2k2G6aiwm6)
+![Flame graph](./images/flame.gif)
 
 * Find the ending of a method corresponding to the specified beggining.
   * When cursor is on a line that has the "begin" keyword, this will find the line with the corresponding "end" keyword
   and select all the lines between them.
-![Flame graph](https://drive.google.com/uc?export=view&id=1HKH-7i2rsxieyIiVQBp2YQeFRwW139kg)
+![Match](./images/match.gif)
 
 * Isolate log messages belonging to a specific thread.
   * Filter out all lines that do not contain the selected text (or the word under cursor if no selection).
