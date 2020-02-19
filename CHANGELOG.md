@@ -33,3 +33,7 @@
 
 ## [1.4.3]
 - Removed accidental banner colour.
+
+## [1.5.0]
+- Added settings to set the keywords that mark the begining and ending of a function call.
+- Ignoring cases when the keyword is actually only a part of a longer word.

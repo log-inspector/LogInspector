@@ -2,7 +2,7 @@
 	"name": "loginspector",
 	"displayName": "Log Inspector",
 	"description": "Analyze log files to better understand the program that it describes.",
-	"version": "1.4.3",
+	"version": "1.5.0",
 	"publisher": "LogInspector",
 	"repository": {
 		"type": "git",
@@ -71,6 +71,18 @@
 					"type" : "boolean",
 					"default" : false,
 					"description": "Defines whether scrolling up zooms in or out on the graph."
+				},
+				"logInspector.beginKeyword": {
+					"type": "string",
+					"default": "begin",
+					"pattern": "^[a-zA-Z0-9_]*$",
+					"description": "A keyword marking the beggining of the function call."
+				},
+				"logInspector.endKeyword": {
+					"type": "string",
+					"default": "end",
+					"pattern": "^[a-zA-Z0-9_]*$",
+					"description": "A keyword marking the ending of the function call."
 				}
 			}
 		}

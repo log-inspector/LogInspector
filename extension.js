@@ -81,7 +81,6 @@ function activate(context) {
 
 		const configuration = vscode.workspace.getConfiguration( "logInspector" );
 		var regExLine = new RegExp( configuration.lineRegex );
-		// var regExLine = /.*\[(Debug[1-5]?|Warning|Error)\]\s*(.*)/;
 		var regExIgnore = /\(.*\)/;
 		var truncateLine = configuration.truncateLine;
 
@@ -92,15 +91,16 @@ function activate(context) {
 			return;
 		}
 
-		var startKeyword = "begin", endKeyword = "end";
+		var startKeyword = configuration.beginKeyword;
+		var endKeyword   = configuration.endKeyword;
 		var searchForward = true;
-		var position = match.groups.body.indexOf( startKeyword );
+		var position = findKeyword( match.groups.body, startKeyword );
 		if ( position === -1 ) {
 			// console.log( "try back" );
-			position = match.groups.body.indexOf( endKeyword );
+			position = findKeyword( match.groups.body, endKeyword );
 			searchForward = false;
-			startKeyword = "end";
-			endKeyword = "begin";
+			startKeyword = configuration.endKeyword;
+			endKeyword   = configuration.beginKeyword;
 		}
 
 		if ( position === -1 ) {
@@ -131,7 +131,7 @@ function activate(context) {
 				continue;
 			}
 
-			position = match.groups.body.indexOf( startKeyword );
+			position = findKeyword( match.groups.body, startKeyword );
 			if ( position !== -1 ) {
 				name = match.groups.body.slice(0, position);
 				name = name.replace( regExIgnore, "" );
@@ -140,7 +140,7 @@ function activate(context) {
 				// console.log( "push at line: " + (line+1) + " - " + name ); // line+1 to match line count in editor...
 			}
 			
-			position = match.groups.body.indexOf( endKeyword );
+			position = findKeyword( match.groups.body, endKeyword );
 			if ( position !== -1 ) {
 				name = match.groups.body.slice(0, position);
 				name = name.replace( regExIgnore, "" );
@@ -557,12 +557,6 @@ function createData( useDates, startLine )
 	var lc = editor.document.lineCount;
 	var line = startLine;
 
-	// 2020-02-03 21:55:22.885 - t0x700004424000 [Debug3]  BSON::Doc::write: end
-	// 2020-01-21 11:57:47.977 - [Debug]   Acorn::parseJSDoc: context scope
-
-	// var dateRegex = /^(?<date>[0-9]{4}-[0-1][0-9]-[0-3][0-9]\s[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3})/;
-	// var regExLine = new RegExp( dateRegex.source + "\\s-\\s(t0x[0-9a-z]+\\s)?\\[(Debug[1-5]?|Warning|Error)\\]\\s*(?<body>.*)")
-
 	const configuration = vscode.workspace.getConfiguration( "logInspector" );
 	var regExLine = new RegExp( configuration.lineRegex );
 	var regExIgnore = /\(.*\)/;
@@ -617,7 +611,7 @@ function createData( useDates, startLine )
 			continue;
 		}
 
-		position = match.groups.body.indexOf( "begin" );
+		position = findKeyword( match.groups.body, configuration.beginKeyword );
 		if ( position !== -1 ) {
 			name = match.groups.body.slice(0, position);
 			name = name.replace( regExIgnore, "" );
@@ -630,9 +624,8 @@ function createData( useDates, startLine )
 			stackNames.push( name );
 		}
 		
-		position = match.groups.body.indexOf( "end" );
+		position = findKeyword( match.groups.body, configuration.endKeyword );
 		if ( position !== -1 ) {
-			// console.log( "end" );
 			name = match.groups.body.slice(0, position);
 			name = name.replace( regExIgnore, "" );
 
@@ -685,7 +678,6 @@ function createData( useDates, startLine )
 			}
 		}
 	}
-	// console.log( "wot" );
 
 	while ( stack.length ) {
 		back = stack.pop();
@@ -710,6 +702,33 @@ function createData( useDates, startLine )
 	// console.log( "done" );
 	return ret;
 }
+
+function findKeyword( text, keyword ) 
+{
+	var ret = text.indexOf( keyword );
+	if ( ret !== -1 ) {
+		// check that we actually found the keyword. If the keyword is "begin", then the word "beginning" shouldn't count.
+		if ( ret !== 0 && isAlphaNumeric( text[ ret - 1 ] ) ) {
+			return -1;
+		}
+		var after = ret + keyword.length;
+		if ( after < text.length && isAlphaNumeric( text[ after ] ) ) {
+			return -1;
+		}
+	}
+	return ret;
+}
+
+function isAlphaNumeric( char ) {
+	var code;
+	code = char.charCodeAt( 0 );
+	if (!(code > 47 && code < 58) && // numeric (0-9)
+		!(code > 64 && code < 91) && // upper alpha (A-Z)
+		!(code > 96 && code < 123)) { // lower alpha (a-z)
+		return false;
+	}
+	return true;
+  };
 
 module.exports = {
 	activate,
