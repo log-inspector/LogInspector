@@ -37,3 +37,7 @@
 ## [1.5.0]
 - Added settings to set the keywords that mark the begining and ending of a function call.
 - Ignoring cases when the keyword is actually only a part of a longer word.
+
+## [1.6.0]
+- Added large file warnings.
+- Added mouse drag scrolling on the flame graph.

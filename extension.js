@@ -9,6 +9,7 @@ function activate(context) {
 	let disposable2 = vscode.commands.registerCommand('loginspector.readLog', function () {
 		try {
 		if (!vscode.window.activeTextEditor) {
+			vscode.window.showWarningMessage( "No active text editor. Extensions do not work on larger files." );
 			return;
 		}
 
@@ -64,8 +65,7 @@ function activate(context) {
 
 	let disposable3 = vscode.commands.registerCommand('loginspector.matchFunction', function () {
 		if (!vscode.window.activeTextEditor) {
-			console.log( "not text editor" );
-			vscode.window.showWarningMessage( "Command run outside of a text editor" );
+			vscode.window.showWarningMessage( "No active text editor. Extensions do not work on larger files." );
 			return;
 		}
 		// console.log("have editor");
@@ -213,6 +213,10 @@ function activate(context) {
 	});
 	let drawLine = vscode.commands.registerCommand('loginspector.drawFromLine', function () {
 		try {
+			if (!vscode.window.activeTextEditor) {
+				vscode.window.showWarningMessage( "No active text editor. Extensions do not work on larger files." );
+				return;
+			}
 			const editor = vscode.window.activeTextEditor;
 			const selection = editor.selection;
 			var line = selection.start.line;
@@ -252,6 +256,10 @@ function deactivate() {
 
 function drawFlame( lastGroup, sub, startLine ) 
 {
+	if (!vscode.window.activeTextEditor) {
+		vscode.window.showWarningMessage( "No active text editor. Extensions do not work on larger files." );
+		return;
+	}
 	logEditor = vscode.window.activeTextEditor;
 
 	var startTime = Date.now();
@@ -494,6 +502,60 @@ function getJS()
 			var line = ev.target.getAttribute( "line" );
 			if ( line ) {
 				sendMessage( line );
+			}
+		}
+
+		var slider = document.getElementById("root");
+		let isDown = false;
+		let startX;
+		let scrollLeft, prevLeft;
+		let momentum = 0;
+		var timeout = null;
+
+		document.addEventListener('mousedown', (e) => {
+			isDown = true;
+			momentum = 0;
+			if ( timeout ) {
+				window.clearTimeout( timeout );
+				timeout = null;
+			}
+			startX = e.clientX;
+			scrollLeft = slider.parentNode.parentElement.scrollLeft;
+			prevLeft = scrollLeft;
+		});
+		document.addEventListener('mouseleave', stopScroll );
+		document.addEventListener('mouseup', stopScroll );
+
+		document.addEventListener('mousemove', (e) => {
+			if(!isDown) return;
+			e.preventDefault();
+			const x = e.clientX;
+			const walk = (x - startX);
+			const diff = ( prevLeft - ( scrollLeft - walk ) );
+			momentum = ( momentum + diff ) / 2;
+			slider.parentNode.parentElement.scrollLeft = scrollLeft - walk;
+			prevLeft = scrollLeft - walk;
+			console.log(walk);
+		});
+
+		function stopScroll() {
+			isDown = false;
+			if ( Math.abs( momentum ) > 2 ) {
+				timeout = window.setTimeout( applyMomentum, 33 );
+			}
+		}
+
+		function applyMomentum() {
+			momentum = momentum * 0.9;
+			slider.parentNode.parentElement.scrollLeft = prevLeft - momentum;
+			prevLeft = prevLeft - momentum;
+
+			if ( Math.abs( momentum ) < 1.5 ) {
+				momentum = 0;
+				timeout = null;
+			}
+			else {
+				timeout = window.setTimeout( applyMomentum, 33 );
 			}
 		}
 	}`;
