@@ -462,9 +462,11 @@ function getJS()
 
 		function zoom( factor, stableX ) 
 		{
+			// console.log( "factor " + factor + " stableX " + stableX );
 			if ( document.rootWidth * factor < 100 || document.rootWidth * factor > 1000000 ) {
 				return; // prevent extreemes
 			}
+			// console.log( "new width " + (document.rootWidth * factor) );
 
 			var root = document.getElementById("root");
 			if ( !stableX ) {
@@ -558,6 +560,9 @@ function getJS()
 				timeout = window.setTimeout( applyMomentum, 33 );
 			}
 		}
+
+		// console.log( document.body.clientWidth );
+		zoom( (document.body.clientWidth - 40) / document.rootWidth, 1 );
 	}`;
 	return js;
 }

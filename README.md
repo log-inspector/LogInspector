@@ -31,6 +31,8 @@ The flame graph can be drawn of the entire file, of the logs that come after the
 or of the last cluster of logs. Two adjecant log lines are considered to be part of the same cluster if there is less
 than one second between them.
 
+## Feedback
+Any feedback, bug report of feature request is apreciated either via email at vsloginspector@gmail.com or on GitHub.
 
 ## Thanks
 Thank you for using Log Inspector.

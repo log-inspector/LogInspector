@@ -41,3 +41,6 @@
 ## [1.6.0]
 - Added large file warnings.
 - Added mouse drag scrolling on the flame graph.
+
+## [1.6.1]
+- Flame graph is scaled to fit the window on open.
