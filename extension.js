@@ -1,6 +1,15 @@
 const vscode = require('vscode');
 var logEditor = null;
 
+function preciseTime(dateTime) {
+	const timeSplit = dateTime.split('.');
+	// Date is up to milliseconds, so it could handle 3 digits of timeSplit[1], but no more.
+	const seconds = new Date(timeSplit[0]) / 1000;
+	if (timeSplit.length === 0) { return seconds; }
+	const subseconds = Number(timeSplit[1]) / (10 ** timeSplit[1].length);
+	return seconds + subseconds;
+}
+
 /**
  * @param {vscode.ExtensionContext} context
  */
@@ -107,7 +116,7 @@ function activate(context) {
 			vscode.window.showWarningMessage( "Begin or end keywords not found on given line" );
 			return; // no begin or end at line
 		}
-		var startDate = new Date( match.groups.date );
+		var startDate = preciseTime( match.groups.date );
 
 		var name, back, original;
 		var done = false;
@@ -160,8 +169,8 @@ function activate(context) {
 				}
 			}
 			if ( stack.length === 0 ) {
-				var endDate = new Date( match.groups.date );
-				var duration = ( endDate.valueOf() - startDate.valueOf() ) / 1000;
+				var endDate = preciseTime( match.groups.date );
+				var duration = endDate - startDate;
 				if ( !searchForward ) {
 					duration = duration * -1;
 				}
@@ -327,7 +336,7 @@ function findClusterStart()
 		if ( !match ) {
 			continue;
 		}
-		date = (new Date( match.groups.date )).valueOf() / 1000;
+		date = preciseTime( match.groups.date );
 		if ( lastDate < 0 ) {
 			lastDate = date;
 		}
@@ -642,7 +651,7 @@ function createData( useDates, startLine )
 			if ( !match ) {
 				continue;
 			}
-			ret.min = (new Date( match.groups.date )).valueOf() / 1000;
+			ret.min = preciseTime( match.groups.date );
 			break;
 		}
 		console.log( "min: " + ret.min );
@@ -654,7 +663,7 @@ function createData( useDates, startLine )
 			if ( !match ) {
 				continue;
 			}
-			ret.max = (new Date( match.groups.date )).valueOf() / 1000;
+			ret.max = preciseTime( match.groups.date );
 			break;
 		}
 		console.log( "max: " + ret.max );
@@ -685,7 +694,7 @@ function createData( useDates, startLine )
 
 			obj = { "name" : name, "start" : line, "calls" : [], "line" : line };
 			if ( useDates ) {
-				obj.start = (new Date( match.groups.date )).valueOf() / 1000 - ret.min;
+				obj.start = preciseTime( match.groups.date ) - ret.min;
 			}
 			stack.push( obj );
 			stackNames.push( name );
@@ -710,7 +719,7 @@ function createData( useDates, startLine )
 				back = stack.pop();
 				stackNames.pop();
 				if ( useDates )  {
-					back.end = (new Date( match.groups.date )).valueOf() / 1000 - ret.min;
+					back.end = preciseTime( match.groups.date ) - ret.min;
 				}
 				else {
 					back.end = line;
