@@ -44,3 +44,6 @@
 
 ## [1.6.1]
 - Flame graph is scaled to fit the window on open.
+
+## [1.6.2]
+- Enabled submillisecond precision in flame graphs.

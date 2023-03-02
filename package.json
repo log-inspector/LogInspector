@@ -2,7 +2,7 @@
 	"name": "loginspector",
 	"displayName": "Log Inspector",
 	"description": "Analyze log files to better understand the program that it describes.",
-	"version": "1.6.1",
+	"version": "1.6.2",
 	"publisher": "LogInspector",
 	"repository": {
 		"type": "git",
