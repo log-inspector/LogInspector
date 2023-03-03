@@ -593,14 +593,14 @@ function drawBlock( data, min, total, level )
 	var height = 20;
 	var top = level * height;
 	var width = ( data.end - data.start ) / total;
-	var left = ( data.start - min ) / total;
+	var left = data.start / total;
 	var color = [ "#cc0000", "#008000", "#0000cc" ][ level % 3 ];
 	str += '<div style="top:' + top
 				 + 'px; left:' + left 
 				 + '%;  height:' + height 
 				 + 'px; width:' + width 
 				 + '%;  background:' + color + '" class="la-block" line="' + data.line + '">'
-				 + drawData( data )
+				 + drawData( data, min )
 				 + '</div>\n'
 
 	var calls = data.calls || [];
@@ -625,13 +625,14 @@ function toPreciseString(seconds) {
 	return niceTime + '.' + subseconds;
 }
 
-function drawData( data ) {
+function drawData( data, min ) {
 	var str = '<div class="la-data">';
 	str += '' + data.name + '\n';
-	str += 'start: ' + toPreciseString(data.start * 1000) + '\n';
-	str += 'end  : ' + toPreciseString(data.end * 1000) + '\n';
-	str += 'time : ' + toSecondsOrMilliseconds(data.end - data.start) + '\n';
-	str += 'line : ' + (data.line+1) + '';
+	str += toPreciseString(data.start + min) + '\n';
+	str += toSecondsOrMilliseconds(data.start) + ' -- start offset\n';
+	str += toSecondsOrMilliseconds(data.end) + ' -- end offset\n';
+	str += toSecondsOrMilliseconds(data.end - data.start) + ' -- duration\n';
+	str += 'line: ' + (data.line+1) + '';
 
 	str += '</div>';
 	return str;
@@ -788,8 +789,6 @@ function createData( useDates, startLine )
 	// console.log( [...ignored.keys()] )
 	// console.log( [...matchedBegins.keys()] )
 
-	ret.max = ret.max - ret.min;
-	ret.min = 0;
 	// console.log( "done" );
 	return ret;
 }
