@@ -47,3 +47,4 @@
 
 ## [1.6.2]
 - Enabled submillisecond precision in flame graphs.
+- Fixed and improved printing of date-time (unfortunately date hardcoded to 'en-GB')

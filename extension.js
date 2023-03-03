@@ -610,12 +610,27 @@ function drawBlock( data, min, total, level )
 	return str;
 }
 
+function toSecondsOrMilliseconds( seconds ) {
+	if (seconds >= 0.01) {
+		return seconds.toFixed(3) + 's';
+	} else {
+		return (seconds * 1000).toFixed(3) + 'ms';
+	}
+}
+
+function toPreciseString(seconds) {
+	const date = new Date(seconds * 1000);
+	const niceTime = date.toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'medium' });
+	const subseconds = seconds.toFixed(6).split('.')[1].replace(/0*$/, "");
+	return niceTime + '.' + subseconds;
+}
+
 function drawData( data ) {
 	var str = '<div class="la-data">';
 	str += '' + data.name + '\n';
-	str += 'start: ' + data.start.toFixed( 3 ) + '\n';
-	str += 'end  : ' + data.end.toFixed( 3 ) + '\n';
-	str += 'time : ' + (data.end - data.start).toFixed( 3 ) + '\n';
+	str += 'start: ' + toPreciseString(data.start * 1000) + '\n';
+	str += 'end  : ' + toPreciseString(data.end * 1000) + '\n';
+	str += 'time : ' + toSecondsOrMilliseconds(data.end - data.start) + '\n';
 	str += 'line : ' + (data.line+1) + '';
 
 	str += '</div>';
