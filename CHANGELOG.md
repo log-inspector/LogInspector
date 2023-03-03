@@ -47,4 +47,5 @@
 
 ## [1.6.2]
 - Enabled submillisecond precision in flame graphs.
-- Fixed and improved printing of date-time (unfortunately date hardcoded to 'en-GB')
+- Fixed and improved printing of flame hover boxes (unfortunately date hardcoded to 'en-GB').
+- Relaxed the default settings (allow spaces for line indentation, make log levels optional, ignore time zone offset in dates).

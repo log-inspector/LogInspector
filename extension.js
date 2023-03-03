@@ -39,7 +39,7 @@ function activate(context) {
 		}
 
 		const configuration = vscode.workspace.getConfiguration( "logInspector" );
-		// var regExStart = /^[0-9]{4}-[0-1][0-9]-[0-3][0-9]/;
+		// var regExStart = /^\s*[0-9]{4}-[0-1][0-9]-[0-3][0-9]/;
 		var regExStart = new RegExp( configuration.lineStart );
 
 		vscode.window.activeTextEditor.edit(editBuilder => {
