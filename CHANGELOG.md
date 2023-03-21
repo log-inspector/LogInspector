@@ -46,6 +46,12 @@
 - Flame graph is scaled to fit the window on open.
 
 ## [1.6.2]
+- Removed stack information message when drawing flame graph.
+
+## [1.6.3]
+- Initial sizing fixed from 1.6.1 fixed.
+
+## [1.6.4]
 - Enabled submillisecond precision in flame graphs.
 - Fixed and improved printing of flame hover boxes (unfortunately date hardcoded to 'en-GB').
 - Relaxed the default settings (allow spaces for line indentation, make log levels optional, ignore time zone offset in dates).

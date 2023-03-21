@@ -570,8 +570,18 @@ function getJS()
 			}
 		}
 
-		// console.log( document.body.clientWidth );
-		zoom( (document.body.clientWidth - 40) / document.rootWidth, 1 );
+		function defered()
+		{
+			// console.log( document.body.clientWidth );
+			var bodyWidth = document.body.clientWidth - 40;
+			if ( bodyWidth > 0 ) {
+				zoom( bodyWidth / document.rootWidth, 1 );
+			}
+			else {
+				window.setTimeout( defered, 20 );
+			}
+		}
+		defered();
 	}`;
 	return js;
 }
@@ -782,9 +792,9 @@ function createData( useDates, startLine )
 			ret.calls.push( back );
 		}
 	}
-	if ( stackNames.length ) {
-		vscode.window.showInformationMessage( 'Stack: [ ' + stackNames.join( " || " ) + " ]" );
-	}
+	// if ( stackNames.length ) {
+	// 	vscode.window.showInformationMessage( 'Stack: [ ' + stackNames.join( " || " ) + " ]" );
+	// }
 
 	// console.log( [...ignored.keys()] )
 	// console.log( [...matchedBegins.keys()] )
